@@ -17,8 +17,9 @@ function hotbarUI()
         >
 
         <textbutton 
-          Event = {{MouseButton1Down: (x, y) => updateButtonPosition(moveButton(x,y)),
+          Event = {{MouseMoved: (x, y) => updateButtonPosition(moveButton(x,y)),
             // Where I left off:
+            // Try this mouseMoved thing ig
             /* How do I constantly update the UI's position, yet check if the button is still down? Could use a coroutine?*/
           MouseButton1Up: () => updateButtonPosition(releaseButton())}}
         
@@ -46,22 +47,26 @@ let myHandle = Roact.mount(hotbarUI(), playerGui, "hotbarUI");
 
 function moveButton(x: TextButton, y: number) : UDim2
 {
+  const mouseToButtonOffsetX = 56; // 112/2 -> half of the UI button's size
+  const mouseToButtonOffsetY = 20; // an offset to put the mouse in the middle of the button
+  const frameXOffset = 200; // The frame's X position
+  const frameYOffset = 474; // The frame's Y Position
   
-  let myNewPosition;
-
-  // this while loop constantly checks if the left mouse is being pressed
-  // then will update the position of the action UI if it is.
-
   if (UserInputService.IsMouseButtonPressed("MouseButton1"))
   {
     print("RUNNING!");
     wait(0.01);
-    // if this works right, follow the player's mouse and update myAction's position
-    return new UDim2(0, Players.LocalPlayer.GetMouse().X, 0, Players.LocalPlayer.GetMouse().Y);
+    // Okay, might need to figure out how to offset by the frame's position.
+    // This is mostly working as intended, it will be dragged along by the mouse.
+    print("X: " + Players.LocalPlayer.GetMouse().X + "Y: " + Players.LocalPlayer.GetMouse().Y);
+    return new UDim2(0, ((Players.LocalPlayer.GetMouse().X - frameXOffset) - mouseToButtonOffsetX), 0, ((Players.LocalPlayer.GetMouse().Y - frameYOffset) - mouseToButtonOffsetY));
   } // end while
-
-  print("DETECT ELSE?");
-  return new UDim2(0, 0, 0, 0);
+  else
+  {
+    print("DETECT ELSE?");
+    // maybe run releasebutton instead?
+    return new UDim2(0, 0, 0, 0);
+  }
 } 
 
 //*********************************************************
