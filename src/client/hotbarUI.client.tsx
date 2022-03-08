@@ -15,7 +15,7 @@ interface UIState
 
 let actionIsMoving = false;
 let actionDebounce = false;
-let action;
+let prevActionPos;
 
 const mouseToButtonOffsetX = 56; // 112/2 -> half of the UI button's size
 const mouseToButtonOffsetY = 20; // an offset to put the mouse in the middle of the button
@@ -62,16 +62,21 @@ class HotbarUI extends Roact.Component<UIProperties, UIState>
 
 // the action is currently moving
 
+/********************************************
+  actionMoving moves the textButton's around
+  based on the position of the player's mouse
+*********************************************/
+
 function actionMoving(x: number, y: number, action: TextButton)
 {
-  print(action);
-  print(y);
+  let mouse; 
   actionIsMoving = true;
-  let mouse;
+  
   if (actionDebounce === false)
   {
     actionDebounce = true;
 
+    // move button based on mouse position and calculations while mouse is held down
     while (actionIsMoving)
     {
       mouse = Players.LocalPlayer.GetMouse();
@@ -80,18 +85,41 @@ function actionMoving(x: number, y: number, action: TextButton)
         new UDim2(
           0, ((Players.LocalPlayer.GetMouse().X - frameXOffset) - mouseToButtonOffsetX), 
           0, ((Players.LocalPlayer.GetMouse().Y - frameYOffset) - mouseToButtonOffsetY));
-      // move button based on mouse position and calculations
     } // end while
-    actionDebounce = false;
   } // end if-debounce
-
 } // end actionMoving
 
-function stopActionMoving()
+/********************************************
+  stopActionMoving halts the while loop in
+  actionMoving as well as handles placement
+  of the button onto the hotbar
+*********************************************/
+
+function stopActionMoving(x: number, y: number, action: TextButton)
 {
-  print("Stopping movement!");
-  actionIsMoving = false; // stop the while loop in the other function...? Wait does this stop it.
-}
+  let xOffset = x - frameXOffset;
+  actionIsMoving = false; // stop the while loop in actionMoving()
+
+  // update the button's position to a prespecified spot on the hotbar
+  if (xOffset >= 0 && xOffset < 112)
+  {
+    action.Position = new UDim2(0,0,0,0);
+  }
+  else if(xOffset >= 112 && xOffset < 224)
+  {
+    action.Position = new UDim2(0,112,0,0);
+  }
+  else if(xOffset >= 224 && xOffset < 336) {action.Position = new UDim2(0,224,0,0);}
+
+  /*
+    I wonder if there's a conflict here between manually updating
+    and Roact, since i'm not using Roact.update
+  */
+
+  // debounce reset here, to prevent user from
+  // moving button again while it's still being moved.
+  actionDebounce = false;
+} // end stopActionMoving
 
 let myHandle = Roact.mount(<HotbarUI/>, playerGui, "HotbarUI");
 let myFrame = playerGui.FindFirstChild("HotbarUI")?.FindFirstChild("1") as Frame;
@@ -99,6 +127,6 @@ let myButtonArray = myFrame.GetChildren() as Array<TextButton>;
 
 myButtonArray?.forEach((element) => {
   element.MouseButton1Down.Connect((x, y) => actionMoving(x, y, element));
-  element.MouseButton1Up.Connect(() => stopActionMoving());
+  element.MouseButton1Up.Connect((x,y) => stopActionMoving(x, y, element));
 })
 
