@@ -1,4 +1,4 @@
-import Roact, { Event } from "@rbxts/roact";
+import Roact, { createElement, Event } from "@rbxts/roact";
 import {Players, UserInputService} from "@rbxts/services";
 
 const playerGui = Players.LocalPlayer.FindFirstChild("PlayerGui") as PlayerGui;
@@ -34,15 +34,44 @@ class HotbarUI extends Roact.Component<UIProperties, UIState>
           Position={new UDim2(0, 200, 0, 474)}         // Center bottom
           BackgroundColor3={new Color3(138, 138, 138)} // A lightish gray
           >
-
           <textbutton 
-            Text = {"Button1"}
+            Text = {"Button0"}
             Position = {new UDim2(0,0,0,0)}
             Size = {new UDim2(0, 112, 0, 50)}
           />
           <textbutton 
-            Text = {"Button2"}
+            Text = {"Button1"}
             Position = {new UDim2(0,112,0,0)}
+            Size = {new UDim2(0, 112, 0, 50)}
+          />
+          <textbutton 
+            Text = {"Button2"}
+            Position = {new UDim2(0,224,0,0)}
+            Size = {new UDim2(0, 112, 0, 50)}
+          />
+          <textbutton 
+            Text = {"Button3"}
+            Position = {new UDim2(0,336,0,0)}
+            Size = {new UDim2(0, 112, 0, 50)}
+          />
+          <textbutton 
+            Text = {"Button4"}
+            Position = {new UDim2(0,448,0,0)}
+            Size = {new UDim2(0, 112, 0, 50)}
+          />
+          <textbutton 
+            Text = {"Button5"}
+            Position = {new UDim2(0,560,0,0)}
+            Size = {new UDim2(0, 112, 0, 50)}
+          />
+          <textbutton 
+            Text = {"Button6"}
+            Position = {new UDim2(0,672,0,0)}
+            Size = {new UDim2(0, 112, 0, 50)}
+          />
+          <textbutton 
+            Text = {"Button7"}
+            Position = {new UDim2(0,784,0,0)}
             Size = {new UDim2(0, 112, 0, 50)}
           />
         </frame>
@@ -58,6 +87,7 @@ class HotbarUI extends Roact.Component<UIProperties, UIState>
 
 function actionMoving(x: number, y: number, action: TextButton)
 {
+  action.ZIndex = 99;
   orgPos = action.Position;
   let mouse; 
   actionIsMoving = true;
@@ -88,29 +118,107 @@ function actionMoving(x: number, y: number, action: TextButton)
 function stopActionMoving(x: number, y: number, action: TextButton)
 {
   let xOffset = x - frameXOffset;
-  let temp: UDim2;
+  let yOffset = y - frameYOffset;
   actionIsMoving = false; // stop the while loop in actionMoving()
 
   // update the button's position to a prespecified spot on the hotbar
   wait(0.1);
-  if (xOffset >= 0 && xOffset < 112)       
+  if (yOffset > 150 || yOffset < -150) // reset to original position if too far off hotbar
   {
-    if (checkForMatches(new UDim(0,0)) === true)
-    {
-      print("test1");
-      print(prevAction.Position);
-      print(orgPos);
-      prevAction.Position = orgPos;
-    } // end if
-    action.Position = new UDim2(0,0,0,0);    
+    action.Position = orgPos;
   } // end if
-  else if(xOffset >= 112 && xOffset < 224) {action.Position = new UDim2(0,112,0,0);}
-  else if(xOffset >= 224 && xOffset < 336) {action.Position = new UDim2(0,224,0,0);}
+  else
+  {
+    if (xOffset >= 0 && xOffset < 112)       
+    {
+      upperCheckForMatches();
+      action.Position = new UDim2(0,0,0,0);    
+    } // end if
+    else if(xOffset >= 112 && xOffset < 224) 
+    {
+      upperCheckForMatches();
+      action.Position = new UDim2(0,112,0,0);
+    }
+    else if(xOffset >= 224 && xOffset < 336) 
+    {
+      upperCheckForMatches();
+      action.Position = new UDim2(0,224,0,0);
+    }
+    else if(xOffset >= 336 && xOffset < 448) 
+    {
+      upperCheckForMatches();
+      action.Position = new UDim2(0,336,0,0);
+    }
+    else if(xOffset >= 448 && xOffset < 560) 
+    {
+      upperCheckForMatches();
+      action.Position = new UDim2(0,448,0,0);
+    }
+    else if(xOffset >= 560 && xOffset < 672) 
+    {
+      upperCheckForMatches();
+      action.Position = new UDim2(0,560,0,0);
+    }
+    else if(xOffset >= 672 && xOffset < 784) 
+    {
+      upperCheckForMatches();
+      action.Position = new UDim2(0,672,0,0);
+    }
+    else if(xOffset >= 784 && xOffset < 856) 
+    {
+      upperCheckForMatches();
+      action.Position = new UDim2(0,784,0,0);
+    }
+  } // end else
+  
 
   // debounce reset here, to prevent user from
   // moving button again while it's still being moved.
+  action.ZIndex = 1;
   actionDebounce = false;
 } // end stopActionMoving
+
+/*
+  The current issue::::::::
+  is in upperCheckForMatches, the first if will always work,
+  because I'm not telling it which button I'm looking to swap with really
+*/
+
+function upperCheckForMatches()
+{
+  if (checkForMatches(new UDim(0,0)) === true)
+  {
+    prevAction.Position = orgPos;
+  } // end if
+  else if(checkForMatches(new UDim(0, 112)) === true)
+  {
+    prevAction.Position = orgPos;
+  }
+  else if (checkForMatches(new UDim(0, 224)) === true)
+  {
+    prevAction.Position = orgPos;
+  }
+  else if (checkForMatches(new UDim(0, 336)) === true)
+  {
+    prevAction.Position = orgPos;
+  }
+  else if (checkForMatches(new UDim(0, 448)) === true)
+  {
+    prevAction.Position = orgPos;
+  }
+  else if (checkForMatches(new UDim(0, 560)) === true)
+  {
+    prevAction.Position = orgPos;
+  }
+  else if (checkForMatches(new UDim(0, 672)) === true)
+  {
+    prevAction.Position = orgPos;
+  }
+  else if (checkForMatches(new UDim(0, 784)) === true)
+  {
+    prevAction.Position = orgPos;
+  } // end if
+} // end upperCheckForMatches
 
 function checkForMatches(xToSwapTo: UDim): boolean
 {
@@ -118,15 +226,15 @@ function checkForMatches(xToSwapTo: UDim): boolean
   // of the forEach loop I guess *shrug*
   let foundToBeTrue: boolean = false;
 
-  myButtonArray.forEach((element) => {
-    if (element.Position.X === xToSwapTo)
+  myButtonArray.forEach((element2) => {
+    if (element2.Position.X === xToSwapTo)
     {
-      prevAction = element;
+      //print(prevAction);
+      prevAction = element2;
       foundToBeTrue = true;
     }
   })
   return foundToBeTrue;
-  return false;
 }
 
 let myHandle = Roact.mount(<HotbarUI/>, playerGui, "HotbarUI");
