@@ -131,42 +131,66 @@ function stopActionMoving(x: number, y: number, action: TextButton)
   {
     if (xOffset >= 0 && xOffset < 112)       
     {
-      upperCheckForMatches();
+      if (checkForMatches(new UDim(0,0)) === true)
+      {
+        prevAction.Position = orgPos;
+      } // end if
       action.Position = new UDim2(0,0,0,0);    
     } // end if
     else if(xOffset >= 112 && xOffset < 224) 
     {
-      upperCheckForMatches();
+      if(checkForMatches(new UDim(0, 112)) === true)
+      {
+        prevAction.Position = orgPos;
+      }
       action.Position = new UDim2(0,112,0,0);
     }
     else if(xOffset >= 224 && xOffset < 336) 
     {
-      upperCheckForMatches();
+      if (checkForMatches(new UDim(0, 224)) === true)
+      {
+        prevAction.Position = orgPos;
+      }
       action.Position = new UDim2(0,224,0,0);
     }
     else if(xOffset >= 336 && xOffset < 448) 
     {
-      upperCheckForMatches();
+      if (checkForMatches(new UDim(0, 336)) === true)
+      {
+        prevAction.Position = orgPos;
+      }
       action.Position = new UDim2(0,336,0,0);
     }
     else if(xOffset >= 448 && xOffset < 560) 
     {
-      upperCheckForMatches();
+      if (checkForMatches(new UDim(0, 448)) === true)
+      {
+        prevAction.Position = orgPos;
+      }
       action.Position = new UDim2(0,448,0,0);
     }
     else if(xOffset >= 560 && xOffset < 672) 
     {
-      upperCheckForMatches();
+      if (checkForMatches(new UDim(0, 560)) === true)
+      {
+        prevAction.Position = orgPos;
+      }
       action.Position = new UDim2(0,560,0,0);
     }
     else if(xOffset >= 672 && xOffset < 784) 
     {
-      upperCheckForMatches();
+      if (checkForMatches(new UDim(0, 672)) === true)
+      {
+        prevAction.Position = orgPos;
+      }
       action.Position = new UDim2(0,672,0,0);
     }
     else if(xOffset >= 784 && xOffset < 856) 
     {
-      upperCheckForMatches();
+      if (checkForMatches(new UDim(0, 784)) === true)
+      {
+        prevAction.Position = orgPos;
+      } // end if
       action.Position = new UDim2(0,784,0,0);
     }
   } // end else
@@ -184,7 +208,7 @@ function stopActionMoving(x: number, y: number, action: TextButton)
   because I'm not telling it which button I'm looking to swap with really
 */
 
-function upperCheckForMatches()
+/*function upperCheckForMatches()
 {
   if (checkForMatches(new UDim(0,0)) === true)
   {
@@ -218,7 +242,7 @@ function upperCheckForMatches()
   {
     prevAction.Position = orgPos;
   } // end if
-} // end upperCheckForMatches
+} // end upperCheckForMatches*/
 
 function checkForMatches(xToSwapTo: UDim): boolean
 {
