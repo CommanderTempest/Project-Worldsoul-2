@@ -20,7 +20,8 @@ class AttackableTarget
     //while (i < numberOf)
     //{
       entity = new Instance("Part");
-      entity.Parent = Workspace;
+      entity.Parent = newF;
+      newF.Parent = Workspace;
       entity.Size = new Vector3(5,5,5);
       entity.Position = new Vector3(0,0,0);
       entity.Name = "Terminator-000";

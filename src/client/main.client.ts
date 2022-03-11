@@ -10,5 +10,6 @@ import {setTarget, myTarget} from "client/target.module";
 
 Remotes.Client.OnEvent("targetEntity", (part: Part) => {
   setTarget(part);
-  print("Target set: " + myTarget);
+  print(part.Name);
+  //print("Target set: " + myTarget.Name);
 })
