@@ -5,7 +5,7 @@ class AttackableTarget
 {
   readonly HP: number;
 
-  constructor(hp: number)
+  constructor(hp: number = 100)
   {
     this.HP = hp;
   } // end constructor
@@ -28,9 +28,23 @@ class AttackableTarget
       entity.Name = "Terminator-000";
       clickDetector = new Instance("ClickDetector");
       clickDetector.Parent = entity;
-      //clickDetector.MouseClick.Connect((player: Player) => setTarget(player, entity))
+      clickDetector.MouseClick.Connect((player: Player) => this.onClick(player, entity))
       return entity;
     //} // end while
     //return new Instance("Part");
   } // end createEntity
+
+  private onClick(player: Player, entity: Part)
+  {
+    Remotes.Server.Create("targetEntity").SendToPlayer(player, entity);
+  } // end onClick
 } // end AttackableTarget
+
+function start()
+{
+  let myEntity = new AttackableTarget();
+
+  myEntity.createEntity();
+} // end start
+
+start()
