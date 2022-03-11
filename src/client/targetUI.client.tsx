@@ -26,5 +26,8 @@ function targetUI(props: UIProps)
 
 let ui = Roact.mount(targetUI(myProps), Players.LocalPlayer.FindFirstChild("PlayerGui"), "Targeting")
 
-let myUpdatedProps: UIProps = {text: Players.LocalPlayer.GetAttribute("target") as string};
-Roact.update(ui, targetUI(myUpdatedProps));
+Remotes.Client.Get("targetEntity").Connect(() => {
+  wait(0.1); // target being set
+  let myUpdatedProps: UIProps = {text: Players.LocalPlayer.GetAttribute("target") as string};
+  Roact.update(ui, targetUI(myUpdatedProps));
+})
