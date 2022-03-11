@@ -1,4 +1,4 @@
-import Roact, { update } from "@rbxts/roact";
+/*import Roact, { update } from "@rbxts/roact";
 import {Players, UserInputService} from "@rbxts/services";
 
 // the player's UI
@@ -20,7 +20,7 @@ function hotbarUI()
           Event = {{MouseMoved: (x, y) => updateButtonPosition(moveButton(x,y)),
             // Where I left off:
             // Try this mouseMoved thing ig
-            /* How do I constantly update the UI's position, yet check if the button is still down? Could use a coroutine?*/
+            // How do I constantly update the UI's position, yet check if the button is still down? Could use a coroutine?
           MouseButton1Up: () => updateButtonPosition(releaseButton())}}
         
           Size = {new UDim2(0, 112.5, 0, 50)}
@@ -78,4 +78,4 @@ function releaseButton() : UDim2
 {
   print("Mouse released");
   return new UDim2(0,0,0,0);
-} // end releaseButton
+} // end releaseButton*/

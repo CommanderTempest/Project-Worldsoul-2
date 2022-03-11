@@ -53,4 +53,5 @@ function start()
 }
 
 wait(6);
+print("starting");
 start();
