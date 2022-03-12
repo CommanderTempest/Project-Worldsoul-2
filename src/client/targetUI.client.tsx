@@ -13,11 +13,12 @@ function targetUI(props: UIProps)
   return (
     <screengui ResetOnSpawn={true}>
       <frame
-        Size={new UDim2(0, 100, 0, 50)}
-        Position={new UDim2(0, 200, 0, 674)} // idk where this is
+        Size={new UDim2(0, 300, 0, 50)}
+        Position={new UDim2(0, 800, 0, 274)} // idk where this is
       >
         <textlabel
           Text = {props.text}
+          Position = {new UDim2(0, 150, 0, 25)}
         />
       </frame>
   </screengui>
