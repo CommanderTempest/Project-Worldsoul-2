@@ -1,3 +1,11 @@
+/******************************************************
+Programmer: krukovv (Discord: Commander Tempest#1406)
+
+This file currently handles the creation of new 
+'attackable targets' and attaches a clickdetector
+to them to handle targeting
+******************************************************/
+
 import { Workspace } from "@rbxts/services";
 import Remotes from "shared/remotes.module";
 
@@ -10,6 +18,7 @@ class AttackableTarget
     this.HP = hp;
   } // end constructor
 
+  // create a dummy entity with preset properties
   createEntity(numberOf: number = 1): Part // this is for the future, this is number of entities to make
   {
     let newF = new Instance("Folder");

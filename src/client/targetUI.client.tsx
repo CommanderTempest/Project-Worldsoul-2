@@ -1,3 +1,11 @@
+/******************************************************
+Programmer: krukovv (Discord: Commander Tempest#1406)
+
+This file creates and updates the targeting UI so it
+displays your currently selected target entity
+******************************************************/
+
+
 import { Players } from "@rbxts/services";
 import Roact from "@rbxts/roact";
 import Remotes from "shared/remotes.module";

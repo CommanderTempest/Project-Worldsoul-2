@@ -1,6 +1,4 @@
-import { Players } from "@rbxts/services";
-import Remotes from "shared/remotes.module";
-import {myStore, setTarget} from "client/roduxSetTarget.module";
+// I was using this file to set the target before, it currently serves no purpose.
 
 export {}
 

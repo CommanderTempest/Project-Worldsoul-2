@@ -3,7 +3,8 @@ import Rodux, { Action, Store } from "@rbxts/rodux";
 /*
 This is poorly named because this is more of a test or Rodux practice bit than anything else
 
-My goal in this file is to store the targeted ENTITY in a Rodux store, to be retrieved by other files.
+Programmer: krukovv (Discord: Commander Tempest#1406)
+This file sets the target in a Rodux store, to be utilized in other files.
 */
 
 interface targetEntity

@@ -1,3 +1,11 @@
+/******************************************************
+Programmer: krukovv (Discord: Commander Tempest#1406)
+
+This file creates a hotbar with 8 buttons in preset
+locations, and allows these buttons to be dragged, and
+swapped with each other.
+******************************************************/
+
 import Roact, { createElement, Event } from "@rbxts/roact";
 import {Players, UserInputService} from "@rbxts/services";
 import Remotes from "shared/remotes.module";
@@ -203,6 +211,10 @@ function stopActionMoving(x: number, y: number, action: TextButton)
   actionDebounce = false;
 } // end stopActionMoving
 
+
+/* this function looks for a button in the location
+ * the currently moving button is over and returns
+ * when it was found                                 */
 function checkForMatches(xToSwapTo: UDim): boolean
 {
   // I need this variable, because I can't return inside
@@ -218,7 +230,9 @@ function checkForMatches(xToSwapTo: UDim): boolean
     }
   })
   return foundToBeTrue;
-}
+} // end checkForMatches
+
+//************************************************************************************
 
 let myHandle = Roact.mount(<HotbarUI/>, playerGui, "HotbarUI");
 let myFrame = playerGui.FindFirstChild("HotbarUI")?.FindFirstChild("1") as Frame;
