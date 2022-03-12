@@ -1,5 +1,6 @@
 import Roact, { createElement, Event } from "@rbxts/roact";
 import {Players, UserInputService} from "@rbxts/services";
+import Remotes from "shared/remotes.module";
 
 const playerGui = Players.LocalPlayer.FindFirstChild("PlayerGui") as PlayerGui;
 
@@ -202,48 +203,6 @@ function stopActionMoving(x: number, y: number, action: TextButton)
   actionDebounce = false;
 } // end stopActionMoving
 
-/*
-  The current issue::::::::
-  is in upperCheckForMatches, the first if will always work,
-  because I'm not telling it which button I'm looking to swap with really
-*/
-
-/*function upperCheckForMatches()
-{
-  if (checkForMatches(new UDim(0,0)) === true)
-  {
-    prevAction.Position = orgPos;
-  } // end if
-  else if(checkForMatches(new UDim(0, 112)) === true)
-  {
-    prevAction.Position = orgPos;
-  }
-  else if (checkForMatches(new UDim(0, 224)) === true)
-  {
-    prevAction.Position = orgPos;
-  }
-  else if (checkForMatches(new UDim(0, 336)) === true)
-  {
-    prevAction.Position = orgPos;
-  }
-  else if (checkForMatches(new UDim(0, 448)) === true)
-  {
-    prevAction.Position = orgPos;
-  }
-  else if (checkForMatches(new UDim(0, 560)) === true)
-  {
-    prevAction.Position = orgPos;
-  }
-  else if (checkForMatches(new UDim(0, 672)) === true)
-  {
-    prevAction.Position = orgPos;
-  }
-  else if (checkForMatches(new UDim(0, 784)) === true)
-  {
-    prevAction.Position = orgPos;
-  } // end if
-} // end upperCheckForMatches*/
-
 function checkForMatches(xToSwapTo: UDim): boolean
 {
   // I need this variable, because I can't return inside
@@ -268,6 +227,13 @@ let myButtonArray = myFrame.GetChildren() as Array<TextButton>;
 let i = 0;
 myButtonArray?.forEach((element) => {
   element.Name = tostring(i);
+  // a test setup for there to be a 'damage' button
+  if (i === 0)
+  {
+    element.MouseButton1Click.Connect(() => {
+      Remotes.Server.Create("sendDamage");
+    })
+  }
   i++;
   element.MouseButton1Down.Connect((x, y) => actionMoving(x, y, element));
   element.MouseButton1Up.Connect((x,y) => stopActionMoving(x, y, element));
