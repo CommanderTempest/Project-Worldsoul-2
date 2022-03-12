@@ -227,13 +227,6 @@ let myButtonArray = myFrame.GetChildren() as Array<TextButton>;
 let i = 0;
 myButtonArray?.forEach((element) => {
   element.Name = tostring(i);
-  // a test setup for there to be a 'damage' button
-  if (i === 0)
-  {
-    element.MouseButton1Click.Connect(() => {
-      Remotes.Server.Create("sendDamage");
-    })
-  }
   i++;
   element.MouseButton1Down.Connect((x, y) => actionMoving(x, y, element));
   element.MouseButton1Up.Connect((x,y) => stopActionMoving(x, y, element));

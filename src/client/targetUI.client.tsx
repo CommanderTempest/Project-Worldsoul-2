@@ -1,6 +1,7 @@
 import { Players } from "@rbxts/services";
 import Roact from "@rbxts/roact";
 import Remotes from "shared/remotes.module";
+import {myStore, setTarget} from "client/roduxSetTarget.module";
 
 interface UIProps {
   text: string
@@ -27,8 +28,9 @@ function targetUI(props: UIProps)
 
 let ui = Roact.mount(targetUI(myProps), Players.LocalPlayer.FindFirstChild("PlayerGui"), "Targeting")
 
-Remotes.Client.Get("targetEntity").Connect(() => {
-  wait(0.1); // target being set
+Remotes.Client.Get("targetEntity").Connect((target: Part) => {
+  Players.LocalPlayer.SetAttribute("target", target.Name);
+  myStore.dispatch(setTarget(target));
   let myUpdatedProps: UIProps = {text: Players.LocalPlayer.GetAttribute("target") as string};
   Roact.update(ui, targetUI(myUpdatedProps));
 })
