@@ -9,6 +9,7 @@ swapped with each other.
 import Roact, { createElement, Event } from "@rbxts/roact";
 import {Players, UserInputService} from "@rbxts/services";
 import Remotes from "shared/remotes.module";
+import { ActionButton } from "./ActionButton.client";
 
 const playerGui = Players.LocalPlayer.FindFirstChild("PlayerGui") as PlayerGui;
 
@@ -36,14 +37,18 @@ class HotbarUI extends Roact.Component<UIProperties, UIState>
 {
   render()
   {
+    /*
+    Textbutton as component to have the events handled
+    */
     return (
+      
       <screengui ResetOnSpawn={false}>
         <frame 
           Size={new UDim2(0, 856, 0, 50)} 
           Position={new UDim2(0, 200, 0, 474)}         // Center bottom
           BackgroundColor3={new Color3(138, 138, 138)} // A lightish gray
           >
-          <textbutton 
+          <ActionButton
             Text = {"Button0"}
             Position = {new UDim2(0,0,0,0)}
             Size = {new UDim2(0, 112, 0, 50)}
@@ -61,6 +66,7 @@ class HotbarUI extends Roact.Component<UIProperties, UIState>
           <textbutton 
             Text = {"Button3"}
             Position = {new UDim2(0,336,0,0)}
+            Event = {{}}
             Size = {new UDim2(0, 112, 0, 50)}
           />
           <textbutton 
@@ -242,6 +248,7 @@ let i = 0;
 myButtonArray?.forEach((element) => {
   element.Name = tostring(i);
   i++;
+  // rodux combat buttons extends Roact.Component
   element.MouseButton1Down.Connect((x, y) => actionMoving(x, y, element));
   element.MouseButton1Up.Connect((x,y) => stopActionMoving(x, y, element));
 })

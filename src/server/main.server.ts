@@ -37,6 +37,7 @@ class AttackableTarget
       entity.Name = "Terminator-000";
       clickDetector = new Instance("ClickDetector");
       clickDetector.Parent = entity;
+      // note: high-latency studio-settings - network - incoming replication lag (seconds?)
       clickDetector.MouseClick.Connect((player: Player) => this.onClick(player, entity))
       return entity;
     //} // end while
