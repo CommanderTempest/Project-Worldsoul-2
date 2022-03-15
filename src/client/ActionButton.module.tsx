@@ -23,10 +23,17 @@ interface ActionProperties {
   Size?: UDim2
 }
 
-class ActionButton extends Roact.Component<ActionProperties>
+interface ActionState {
+  Position: UDim2
+}
+
+class ActionButton extends Roact.Component<ActionProperties, ActionState>
 {
   static actionButtonArray: Array<ActionButton> = new Array<ActionButton>();
-  public Position: UDim2 = this.props.Position;
+
+  state = {
+    Position: this.props.Position
+  }
 
   didMount()
   {
@@ -40,13 +47,18 @@ class ActionButton extends Roact.Component<ActionProperties>
     return (
       <textbutton
         Event = {{MouseButton1Down: (button: TextButton, x: number, y: number) => {actionMoving(x,y,button);},
-                  MouseButton1Up: (button: TextButton, x: number, y: number) => {stopActionMoving(x,y,button);}
+                  MouseButton1Up: (button: TextButton, x: number, y: number) => {stopActionMoving(x,y,this, button);}
       }}
         Text = {this.props.Text}
-        Position = {this.props.Position}
+        Position = {this.state.Position}
         Size = {this.props.Size}
       />
     )
+  }
+
+  setActionState(pos: UDim2)
+  {
+    this.setState({Position: pos})
   }
 } // end ActionButton
 
@@ -85,7 +97,7 @@ function actionMoving(x: number, y: number, action: TextButton)
   of the button onto the hotbar
 *********************************************/
 
-function stopActionMoving(x: number, y: number, action: TextButton)
+function stopActionMoving(x: number, y: number, action: ActionButton, button: TextButton)
 {
   let xOffset = x - frameXOffset;
   let yOffset = y - frameYOffset;  
@@ -95,80 +107,55 @@ function stopActionMoving(x: number, y: number, action: TextButton)
   wait(0.1);
   if (yOffset > 150 || yOffset < -150) // reset to original position if too far off hotbar
   {
-    action.Position = orgPos;
+    action.setActionState(orgPos);
   } // end if
   else
   {
     if (xOffset >= 0 && xOffset < 112)       
     {
-      if (checkForMatches(new UDim(0,0)) === true)
-      {
-        prevAction.Position = orgPos;
-      } // end if
-      action.Position = new UDim2(0,0,0,0);    
+      checkForMatches(new UDim(0, 0));
+      action.setActionState(new UDim2(0,0,0,0));   
     } // end if
     else if(xOffset >= 112 && xOffset < 224) 
     {
-      if(checkForMatches(new UDim(0, 112)) === true)
-      {
-        prevAction.Position = orgPos;
-      }
-      action.Position = new UDim2(0,112,0,0);
+      checkForMatches(new UDim(0, 112));
+      action.setActionState(new UDim2(0,112,0,0));   
     }
     else if(xOffset >= 224 && xOffset < 336) 
     {
-      if (checkForMatches(new UDim(0, 224)) === true)
-      {
-        prevAction.Position = orgPos;
-      }
-      action.Position = new UDim2(0,224,0,0);
+      checkForMatches(new UDim(0, 224));
+      action.setActionState(new UDim2(0,224,0,0));   
     }
     else if(xOffset >= 336 && xOffset < 448) 
     {
-      if (checkForMatches(new UDim(0, 336)) === true)
-      {
-        prevAction.Position = orgPos;
-      }
-      action.Position = new UDim2(0,336,0,0);
+      checkForMatches(new UDim(0, 336));
+      action.setActionState(new UDim2(0,336,0,0));   
     }
     else if(xOffset >= 448 && xOffset < 560) 
     {
-      if (checkForMatches(new UDim(0, 448)) === true)
-      {
-        prevAction.Position = orgPos;
-      }
-      action.Position = new UDim2(0,448,0,0);
+      checkForMatches(new UDim(0, 448));
+      action.setActionState(new UDim2(0,448,0,0));   
     }
     else if(xOffset >= 560 && xOffset < 672) 
     {
-      if (checkForMatches(new UDim(0, 560)) === true)
-      {
-        prevAction.Position = orgPos;
-      }
-      action.Position = new UDim2(0,560,0,0);
+      checkForMatches(new UDim(0, 560));
+      action.setActionState(new UDim2(0,560,0,0));   
     }
     else if(xOffset >= 672 && xOffset < 784) 
     {
-      if (checkForMatches(new UDim(0, 672)) === true)
-      {
-        prevAction.Position = orgPos;
-      }
-      action.Position = new UDim2(0,672,0,0);
+      checkForMatches(new UDim(0, 672));
+      action.setActionState(new UDim2(0,672,0,0));   
     }
     else if(xOffset >= 784 && xOffset < 856) 
     {
-      if (checkForMatches(new UDim(0, 784)) === true)
-      {
-        prevAction.Position = orgPos;
-      } // end if
-      action.Position = new UDim2(0,784,0,0);
+      checkForMatches(new UDim(0, 784));
+      action.setActionState(new UDim2(0,784,0,0));   
     }
   } // end else
-  
 
   // debounce reset here, to prevent user from
   // moving button again while it's still being moved.
-  action.ZIndex = 1;
+  button.ZIndex = 1;
   actionDebounce = false;
 } // end stopActionMoving
 
@@ -176,24 +163,15 @@ function stopActionMoving(x: number, y: number, action: TextButton)
 /* this function looks for a button in the location
  * the currently moving button is over and returns
  * when it was found                                 */
-function checkForMatches(xToSwapTo: UDim, currentAction: TextButton): boolean
+function checkForMatches(xToSwapTo: UDim)
 {
-  // I need this variable, because I can't return inside
-  // of the forEach loop I guess *shrug*
-  let foundToBeTrue: boolean = false;
-  
   ActionButton.actionButtonArray.forEach((element2) => {
-    if (element2.Position.X === xToSwapTo)
+    // need a way to stop this for loop after the position is set
+    if (element2.state.Position.X === xToSwapTo)
     {
-      //print(prevAction);
-      print("Prev:" + prevAction);
-      print("Element: " + element2);
-      prevAction = element2;
-      element2.Position = orgPos;
-      foundToBeTrue = true;
+      element2.setActionState(orgPos);
     }
   })
-  return foundToBeTrue;
 } // end checkForMatches
 
 
