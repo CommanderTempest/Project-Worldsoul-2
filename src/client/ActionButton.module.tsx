@@ -1,99 +1,59 @@
-/******************************************************
-Programmer: krukovv (Discord: Commander Tempest#1406)
+//idk put this on server?
 
-This file creates a hotbar with 8 buttons in preset
-locations, and allows these buttons to be dragged, and
-swapped with each other.
-******************************************************/
-
-import Roact, { createElement, Event } from "@rbxts/roact";
+import Roact from "@rbxts/roact";
 import {Players, UserInputService} from "@rbxts/services";
-import Remotes from "shared/remotes.module";
-import { ActionButton } from "./ActionButton.module";
 
 const playerGui = Players.LocalPlayer.FindFirstChild("PlayerGui") as PlayerGui;
 
-interface UIProperties 
-{
-  // custom props!
-}
-
-interface UIState
-{
-
-}
-
 let actionIsMoving = false;
 let actionDebounce = false;
-let prevAction: TextButton;
+let prevAction: ActionButton;
 let orgPos: UDim2;
+
+let myFrame = playerGui.FindFirstChild("HotbarUI")?.FindFirstChild("1") as Frame;
 
 const mouseToButtonOffsetX = 56; // 112/2 -> half of the UI button's size
 const mouseToButtonOffsetY = 20; // an offset to put the mouse in the middle of the button
 const frameXOffset = 200;        // The frame's X position
 const frameYOffset = 474;        // The frame's Y Position
 
-class HotbarUI extends Roact.Component<UIProperties, UIState>
+interface ActionProperties {
+  Text: string
+  Position: UDim2
+  Size?: UDim2
+}
+
+class ActionButton extends Roact.Component<ActionProperties>
 {
+  static actionButtonArray: Array<ActionButton> = new Array<ActionButton>();
+  public Position: UDim2 = this.props.Position;
+
+  didMount()
+  {
+    ActionButton.actionButtonArray.push(this);
+  }
+
   render()
   {
+    // cards on my website need to be 300px large and no larger than 375px -- university note
+    //maybe include image, one for empty, one for the action
     return (
-      <screengui ResetOnSpawn={false}>
-        <frame 
-          Size={new UDim2(0, 856, 0, 50)} 
-          Position={new UDim2(0, 200, 0, 474)}         // Center bottom
-          BackgroundColor3={new Color3(138, 138, 138)} // A lightish gray
-          >
-          <ActionButton
-            Text = {"Button0"}
-            Position = {new UDim2(0,0,0,0)}
-            Size = {new UDim2(0, 112, 0, 50)}
-          />
-          <ActionButton 
-            Text = {"Button1"}
-            Position = {new UDim2(0,112,0,0)}
-            Size = {new UDim2(0, 112, 0, 50)}
-          />
-          <ActionButton 
-            Text = {"Button2"}
-            Position = {new UDim2(0,224,0,0)}
-            Size = {new UDim2(0, 112, 0, 50)}
-          />
-          <ActionButton  
-            Text = {"Button3"}
-            Position = {new UDim2(0,336,0,0)}
-            Size = {new UDim2(0, 112, 0, 50)}
-          />
-          <ActionButton 
-            Text = {"Button4"}
-            Position = {new UDim2(0,448,0,0)}
-            Size = {new UDim2(0, 112, 0, 50)}
-          />
-          <ActionButton 
-            Text = {"Button5"}
-            Position = {new UDim2(0,560,0,0)}
-            Size = {new UDim2(0, 112, 0, 50)}
-          />
-          <ActionButton 
-            Text = {"Button6"}
-            Position = {new UDim2(0,672,0,0)}
-            Size = {new UDim2(0, 112, 0, 50)}
-          />
-          <ActionButton 
-            Text = {"Button7"}
-            Position = {new UDim2(0,784,0,0)}
-            Size = {new UDim2(0, 112, 0, 50)}
-          />
-        </frame>
-      </screengui>
+      <textbutton
+        Event = {{MouseButton1Down: (button: TextButton, x: number, y: number) => {actionMoving(x,y,button);},
+                  MouseButton1Up: (button: TextButton, x: number, y: number) => {stopActionMoving(x,y,button);}
+      }}
+        Text = {this.props.Text}
+        Position = {this.props.Position}
+        Size = {this.props.Size}
+      />
     )
-  } // end render
-}
+  }
+} // end ActionButton
 
 /********************************************
   actionMoving moves the textButton's around
   based on the position of the player's mouse
-*********************************************
+*********************************************/
 
 function actionMoving(x: number, y: number, action: TextButton)
 {
@@ -123,7 +83,7 @@ function actionMoving(x: number, y: number, action: TextButton)
   stopActionMoving halts the while loop in
   actionMoving as well as handles placement
   of the button onto the hotbar
-*********************************************
+*********************************************/
 
 function stopActionMoving(x: number, y: number, action: TextButton)
 {
@@ -215,42 +175,27 @@ function stopActionMoving(x: number, y: number, action: TextButton)
 
 /* this function looks for a button in the location
  * the currently moving button is over and returns
- * when it was found                                 *
-function checkForMatches(xToSwapTo: UDim): boolean
+ * when it was found                                 */
+function checkForMatches(xToSwapTo: UDim, currentAction: TextButton): boolean
 {
   // I need this variable, because I can't return inside
   // of the forEach loop I guess *shrug*
   let foundToBeTrue: boolean = false;
-
-  myButtonArray.forEach((element2) => {
+  
+  ActionButton.actionButtonArray.forEach((element2) => {
     if (element2.Position.X === xToSwapTo)
     {
       //print(prevAction);
+      print("Prev:" + prevAction);
+      print("Element: " + element2);
       prevAction = element2;
+      element2.Position = orgPos;
       foundToBeTrue = true;
     }
   })
   return foundToBeTrue;
 } // end checkForMatches
 
-//************************************************************************************/
 
-let myHandle = Roact.mount(<HotbarUI/>, playerGui, "HotbarUI");
-let myFrame = playerGui.FindFirstChild("HotbarUI")?.FindFirstChild("1") as Frame;
-let myButtonArray = myFrame.GetChildren() as Array<TextButton>;
 
-let i = 0
-myButtonArray.forEach((element) => {
-  element.Name = tostring(i);
-  i++;
-})
-
-/*let i = 0;
-myButtonArray?.forEach((element) => {
-  element.Name = tostring(i);
-  i++;
-  // rodux combat buttons extends Roact.Component
-  element.MouseButton1Down.Connect((x, y) => actionMoving(x, y, element));
-  element.MouseButton1Up.Connect((x,y) => stopActionMoving(x, y, element));
-})*/
-
+export {ActionButton}
